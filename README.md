@@ -7,7 +7,7 @@ expect everything to work perfectly.
 
 ## Download
 
-You can download the latest version of Jarvis from the [Releases](https://ct2765.github.io/Computer-Assistant-Jarvis-/) page.
+You can download the latest version of Jarvis from the release tab.
 
 ## What Jarvis can do
 
@@ -15,6 +15,10 @@ You can download the latest version of Jarvis from the [Releases](https://ct2765
 - Run Steam games
 - Set timers
 - Check for and install updates automatically
+
+## WARNING
+
+THIS APP GAINS ACCESS TO YOUR STEAM LIBRAY ONLY TO OPEN A GAME NOTHING ELSE. THIS IS OPEN SOURCE SO IF YOU HAVE ISSUES YOU CAN LOOK ATH THE CODE.
 
 Update System
 
@@ -58,3 +62,4 @@ This will update both `version.json` and `Jarvis.py` with the new version inform
 Version History
 
 - 1.0.0: Initial release with basic functionality (some point I want to incorperate AI into it but that will be for a later point)
+- 1.0.1: Gender/Greeting Update (adds a gender selection for first open, adds greeting everytime app is open, add new prompt "I would like to play a game" to open a steam game.)
