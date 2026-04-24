@@ -2,7 +2,7 @@ Welcome to my own Jarvis Assistant
 
 This was built using Python and Tkinter
 
-This app is in very early stages of development and is very experimental so dont
+This app is in very early stages of development and is a fun little project of mine and is very experimental so dont
 expect everything to work perfectly.
 
 ## Download
