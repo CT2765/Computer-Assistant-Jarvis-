@@ -57,4 +57,5 @@ This will update both `version.json` and `Jarvis.py` with the new version inform
 
 Version History
 
-- 1.0.0: Initial release with basic functionality (some point I want to incorperate AI into it but that will be for a later point)
+- 1.1.0: Added gender selection, personalized responses, help command, daily greetings, and conversational game launching
+- 1.0.0: Initial release with basic functionality (some point I want to incorporate AI into it but that will be for a later point)
