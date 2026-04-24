@@ -10,7 +10,7 @@ import tempfile
 import sys
 
 # Version information
-CURRENT_VERSION = "1.0.0"
+CURRENT_VERSION = "1.1.0"
 UPDATE_URL = "https://raw.githubusercontent.com/yourusername/jarvis/main/version.json"  # Replace with your actual update URL
 UPDATE_DOWNLOAD_URL = "https://github.com/yourusername/jarvis/releases/latest/download/JarvisInstaller.exe"  # Replace with your actual download URL
 
