@@ -1,0 +1,57 @@
+# Jarvis Application Changelog - Changes from v1.0.1 to v1.0.2
+
+## Version 1.0.2 - Game Cancellation Feature
+**Release Date:** April 24, 2026
+
+### New Features Added:
+- **Game Selection Cancellation**: Users can now cancel the game selection process by saying:
+  - "nevermind"
+  - "never mind"
+  - "i change my mind"
+  - "change my mind"
+  - "forget it"
+  - "cancel"
+
+- **Improved User Experience**: When cancelling game selection, Jarvis responds with:
+  - "No worries [sir/ma'am], what would you like me to do?"
+  - Returns to normal command processing mode
+
+### Technical Changes:
+- Modified `handle_command()` function to check for cancellation phrases when in game selection mode
+- Added early return logic for cancellation before attempting to launch games
+- Updated help message to document the cancellation feature
+- Enhanced conversational flow for better user interaction
+
+### Files Modified:
+- `Jarvis.py`: Added cancellation logic and updated help text
+- `version.json`: Updated to version 1.0.2 with appropriate changelog
+
+### Previous Features (from v1.0.1):
+- Gender selection on first run
+- Personalized responses ("sir"/"ma'am")
+- Help command system
+- Daily greeting messages
+- Conversational game launching ("I would like to play a game")
+- Program launching (Notepad, Calculator, Steam, etc.)
+- Timer functionality
+- Update checking system
+
+### Commands Available:
+- "open [program]" - Launch programs
+- "run [game]" - Launch Steam games
+- "I would like to play a game" - Start game selection (with cancellation support)
+- "create a timer for [time]" - Set timers
+- "update" - Check for updates
+- "version" - Show current version
+- "help" - Show help message
+
+### Known Issues:
+- None reported
+
+### Future Plans:
+- Incorporate AI functionality (as mentioned in original README)
+- Additional program launch support
+- Enhanced timer features
+
+---
+**Note:** This changelog documents the evolution from the basic v1.0.1 functionality to the enhanced v1.0.2 with improved user interaction capabilities.
