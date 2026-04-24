@@ -21,13 +21,13 @@ def launch_program(program):
 
     if program == "youtube":
         os.system("start https://youtube.com")
-        return "Yes sir, opening YouTube. What are you in the mood to watch?"
+        return f"Yes {get_honorific()}, opening YouTube. What are you in the mood to watch?"
 
     if program == "steam":
         steam_path = r"C:\Program Files (x86)\Steam\Steam.exe"
         if os.path.exists(steam_path):
             subprocess.Popen([steam_path])
-            return "Yes sir, opening Steam. Have fun gaming!"
+            return f"Yes {get_honorific()}, opening Steam. Have fun gaming!"
         return "Steam was not found in the default location. Make sure Steam is installed."
 
     if program == "spotify":
@@ -35,7 +35,7 @@ def launch_program(program):
         spotify_path = os.path.expandvars(spotify_path)
         if os.path.exists(spotify_path):
             subprocess.Popen([spotify_path])
-            return "Opening Spotify"
+            return f"Yes {get_honorific()}, opening Spotify"
         return "Spotify was not found in the default location. Make sure Spotify is installed."
 
     if program == "discord":
@@ -43,17 +43,17 @@ def launch_program(program):
         discord_path = os.path.expandvars(discord_path)
         if os.path.exists(discord_path):
             subprocess.Popen([discord_path, "--processStart", "Discord.exe"])
-            return "Opening Discord"
+            return f"Yes {get_honorific()}, opening Discord"
         return "Discord was not found in the default location. Make sure Discord is installed."
 
     try:
         subprocess.Popen([program])
-        return f"Opening {program.title()}"
+        return f"Yes {get_honorific()}, opening {program.title()}"
     except FileNotFoundError:
         if os.path.exists(program):
             try:
                 os.startfile(program)
-                return f"Opening {program}"
+                return f"Yes {get_honorific()}, opening {program}"
             except OSError:
                 return f"Found '{program}', but could not open it."
         return f"Could not find a program named '{program}'. Try 'open notepad', 'open calculator', 'open Steam', 'open Spotify', or 'open Discord'."
@@ -269,27 +269,37 @@ def perform_update():
     # Run update in background thread
     threading.Thread(target=update_thread, daemon=True).start()
 
-# Create Window
-root = tk.Tk()
-root.title("Jarvis")
-root.geometry("400x300")
+def setup_chat_ui():
+    global chat_log, entry
+    
+    # Chat Display
+    chat_log = tk.Text(root, state='disabled', height=8)
+    chat_log.pack(padx=10, pady=10, fill=tk.X, expand=False)
+    chat_log.configure(takefocus=0)
 
-# Chat Display
-chat_log = tk.Text(root, state='disabled')
-chat_log.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
-chat_log.configure(takefocus=0)
+    # Input Box
+    entry = tk.Entry(root)
+    entry.pack(padx=10, pady=10, fill=tk.X)
 
-# Input Box
-entry = tk.Entry(root)
-entry.pack(padx=10, pady=10, fill=tk.X)
+    def set_focus():
+        entry.focus_set()
+        entry.icursor(tk.END)
 
-def set_focus():
-    entry.focus_set()
-    entry.icursor(tk.END)
+    root.after(200, set_focus)
 
-root.after(200, set_focus)
+    entry.bind("<Button-1>", lambda e: entry.focus_set())
 
-entry.bind("<Button-1>", lambda e: entry.focus_set())
+    # When user presses Enter
+    def on_enter(event):
+        user_input = entry.get()
+        entry.delete(0, tk.END)
+
+        display_message("You", user_input)
+        response = handle_command(user_input)
+        display_message("Jarvis", response)
+        entry.focus_set()
+
+    entry.bind("<Return>", on_enter)
 
 # Function to display messages
 def display_message(sender, message):
@@ -298,9 +308,36 @@ def display_message(sender, message):
     chat_log.config(state='disabled')
     chat_log.see(tk.END)
 
-# Basic Command Handler
+# Function to get honorific based on gender
+def get_honorific():
+    gender_file = "gender.txt"
+    try:
+        with open(gender_file, "r") as f:
+            gender = f.read().strip().lower()
+            return "sir" if gender == "male" else "ma'am"
+    except:
+        return "sir"  # Default
+
+# Update responses to use honorific
+def update_responses():
+    global launch_program, run_steam_game
+    # We'll modify the return strings in the functions
+
+# Global variables for conversation state
+awaiting_game_name = False
+
 def handle_command(command):
+    global awaiting_game_name
     command = command.lower()
+
+    # Check if user is responding with a game name
+    if awaiting_game_name:
+        awaiting_game_name = False  # Reset state
+        steam_result = run_steam_game(command)
+        if steam_result:
+            return steam_result
+        else:
+            return f"I'm sorry {get_honorific()}, I couldn't find '{command}' in your Steam library. Try 'run [game name]' or check if the game is installed."
 
     if command.startswith("create a timer for "):
         duration_text = command.split("create a timer for ", 1)[1]
@@ -325,19 +362,25 @@ def handle_command(command):
     if command in ["version", "what version", "current version"]:
         return f"Current version: {CURRENT_VERSION}"
 
+    # Check for game playing intent
+    if any(phrase in command for phrase in ["i would like to play a game", "i'd like to play a game", "i want to play a game", "play a game", "let's play a game"]):
+        awaiting_game_name = True
+        return f"Certainly {get_honorific()}, what game would you like to play?"
+
+    if command in ["help", "commands", "what can you do"]:
+        return """Here are the commands I can help you with:
+
+• "open [program]" - Launch a program (e.g., "open notepad", "open calculator")
+• "run [game]" - Launch a Steam game (e.g., "run eldenring")
+• "I would like to play a game" - Start game selection conversation
+• "create a timer for [time]" - Set a timer (e.g., "create a timer for 5 minutes")
+• "update" - Check for and install updates
+• "version" - Show current version
+• "help" - Show this help message
+
+Just type your command in the box below!"""
+
     return "I do not recognize that command. Try 'create a timer for 5 seconds', 'open notepad', 'open calculator', 'update', or 'version'."
-
-# When user presses Enter
-def on_enter(event):
-    user_input = entry.get()
-    entry.delete(0, tk.END)
-
-    display_message("You", user_input)
-    response = handle_command(user_input)
-    display_message("Jarvis", response)
-    entry.focus_set()
-
-entry.bind("<Return>", on_enter)
 
 # Check for updates on startup (in background)
 def startup_update_check():
@@ -350,6 +393,63 @@ def startup_update_check():
             pass  # Silently fail on startup check
     
     threading.Thread(target=check_thread, daemon=True).start()
+
+# Create Window
+root = tk.Tk()
+root.title("Jarvis")
+root.geometry("400x300")
+
+# Check for first run
+first_run_file = "first_run.txt"
+gender_file = "gender.txt"
+
+if not os.path.exists(first_run_file):
+    # First run - show gender selection
+    def submit_gender():
+        selected = gender_var.get()
+        if selected:
+            try:
+                with open(gender_file, "w") as f:
+                    f.write(selected)
+                with open(first_run_file, "w") as f:
+                    f.write("First run completed")
+            except:
+                pass
+            # Hide gender widgets
+            gender_label.pack_forget()
+            male_radio.pack_forget()
+            female_radio.pack_forget()
+            submit_button.pack_forget()
+            # Show chat UI
+            setup_chat_ui()
+            # Show welcome message
+            welcome_message = f"""Hello! I'm Jarvis, your desktop voice assistant. Here's what I can do:
+
+• Launch programs and applications (say "open notepad" or "open calculator")
+• Run Steam games (say "run [game name]")
+• Set timers (say "create a timer for 5 minutes")
+• Check for and install updates (say "update")
+
+Just type your commands in the box below. I'm here to help!"""
+            display_message("Jarvis", welcome_message)
+    
+    gender_var = tk.StringVar()
+    gender_label = tk.Label(root, text="Welcome to Jarvis! Please select your gender:", font=("Arial", 12))
+    gender_label.pack(pady=20)
+    
+    male_radio = tk.Radiobutton(root, text="Male", variable=gender_var, value="male", font=("Arial", 10))
+    male_radio.pack()
+    
+    female_radio = tk.Radiobutton(root, text="Female", variable=gender_var, value="female", font=("Arial", 10))
+    female_radio.pack()
+    
+    submit_button = tk.Button(root, text="Submit", command=submit_gender, font=("Arial", 10))
+    submit_button.pack(pady=20)
+    
+else:
+    # Normal startup
+    setup_chat_ui()
+    display_message("Jarvis", f"Hello {get_honorific().title()}, what would you like to do today?")
 
 # Start update check after GUI is ready
 root.after(2000, startup_update_check)  # Check 2 seconds after startup

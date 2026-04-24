@@ -7,9 +7,7 @@ expect everything to work perfectly.
 
 ## Download
 
-You can download the latest version of Jarvis from the [Releases](https://github.com/YOUR_USERNAME/YOUR_REPO/releases) page.
-
-Alternatively, visit the [GitHub Pages site](https://YOUR_USERNAME.github.io/YOUR_REPO/) for a simple download interface.
+You can download the latest version of Jarvis from the [Releases](https://ct2765.github.io/Computer-Assistant-Jarvis-/) page.
 
 ## What Jarvis can do
 

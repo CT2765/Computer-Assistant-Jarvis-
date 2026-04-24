@@ -11,3 +11,7 @@ Thumbs.db
 # IDE files
 .vscode/
 .idea/
+
+# User-specific files
+gender.txt
+first_run.txt
